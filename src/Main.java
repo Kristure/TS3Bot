@@ -13,8 +13,8 @@ public class Main {
 
     public static void main(String[] args) {
         final TS3Config config = new TS3Config();
-        //config.setHost("104.214.227.48");
-        config.setHost("127.0.0.1");
+        config.setHost("104.214.227.48");
+        //config.setHost("127.0.0.1");
         config.setEnableCommunicationsLogging(true);
 
         final TS3Query query = new TS3Query(config);
@@ -95,12 +95,14 @@ public class Main {
         api.addTS3Listeners(new TS3EventAdapter() {
             @Override
             public void onClientJoin(ClientJoinEvent e) {
-                api.sendPrivateMessage(e.getClientId(), "Welcome to the new Ouagadougou server. I am a bot" +
-                        " created by the almighty Kristure. " +
-                        "To use me, type [b]!help[/b] in the [b]Welcome[/b] channel.");
+                if(api.getClientInfo(e.getClientId()).getDatabaseId() != 1){
+                    api.sendPrivateMessage(e.getClientId(), "Welcome to the new Ouagadougou server. I am a bot" +
+                            " created by the almighty Kristure. " +
+                            "To use me, type [b]!help[/b] in the [b]Welcome[/b] channel.");
 
-                PushMessage pushover = new PushMessage();
-                pushover.push(e.getClientNickname() + " has joined the teamspeak server.");
+                    PushMessage pushover = new PushMessage();
+                    pushover.push(e.getClientNickname() + " has joined the teamspeak server.");
+                }
             }
         });
 
@@ -111,7 +113,10 @@ public class Main {
                     PushMessage pushover = new PushMessage();
                     pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
                             api.getChannelInfo(e.getTargetChannelId()).getName(), 1);
-                }else{
+                }else if (api.getClientInfo(e.getClientId()).getDatabaseId() == 1){
+                    // Client is serveradmin. Do nothing
+                }
+                else{
                     PushMessage pushover = new PushMessage();
                     pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
                             api.getChannelInfo(e.getTargetChannelId()).getName());
