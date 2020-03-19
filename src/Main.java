@@ -5,16 +5,19 @@ import com.github.theholywaffle.teamspeak3.api.ChannelProperty;
 import com.github.theholywaffle.teamspeak3.api.TextMessageTargetMode;
 import com.github.theholywaffle.teamspeak3.api.event.*;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Channel;
+import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
+import com.github.theholywaffle.teamspeak3.api.wrapper.DatabaseClient;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
 
     public static void main(String[] args) {
         final TS3Config config = new TS3Config();
-        // config.setHost("104.214.227.48");
-        config.setHost("127.0.0.1");
+        config.setHost("104.214.227.48");
+        // config.setHost("127.0.0.1");
         config.setEnableCommunicationsLogging(true);
 
         final TS3Query query = new TS3Query(config);
@@ -24,6 +27,14 @@ public class Main {
         api.login("serveradmin", args[0]);
         api.selectVirtualServerById(1);
         api.setNickname("ArmandBot");
+
+        // Map clients with clid so that it can be used to get nickname on serverleave
+        Map<Integer, Client> clientDbMap = new HashMap<>();
+        List<Client> clientDbList = api.getClients();
+        for(Client cli : clientDbList){
+            clientDbMap.put(cli.getId(), cli);
+        }
+        clientDbList.clear();
 
         // Get our own client ID by running "whoami" command.
         final int clientId = api.whoAmI().getId();
@@ -70,7 +81,7 @@ public class Main {
 
                         final Map<ChannelProperty, String> properties = new HashMap<>();
                         properties.put(ChannelProperty.CHANNEL_FLAG_TEMPORARY, "1");
-                        properties.put(ChannelProperty.CPID, "12"); // Make it a child of "private channels (CID: 12)
+                        properties.put(ChannelProperty.CPID, "12");// Make it a child of "private channels" (CID: 12)
                         properties.put(ChannelProperty.CHANNEL_DELETE_DELAY, "1800"); //
                         properties.put(ChannelProperty.CHANNEL_CODEC_QUALITY, "7"); // Set codec quality to 7
                         if(api.getChannelByNameExact(e.getInvokerName(),true) == null){
@@ -96,12 +107,25 @@ public class Main {
             @Override
             public void onClientJoin(ClientJoinEvent e) {
                 if(api.getClientInfo(e.getClientId()).getDatabaseId() != 1){
+                    List<Client> clientList = api.getClients();
+                    String message = e.getClientNickname() + " has joined the teamspeak server. \n\n" +
+                            "The clients connected are now:";
+                    for(Client cli : clientList){
+                        if(cli.getType() == 0){
+                            message = message.concat("\n" + cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId()
+                            ).getName() + ")");
+                        }
+                    }
+
+                    clientList.clear();
+
                     api.sendPrivateMessage(e.getClientId(), "Welcome to the new Ouagadougou server. " +
                             "I am a bot created by the almighty Kristure. " +
                             "To use me, type [b]!help[/b] in the [b]Welcome[/b] channel.");
 
                     PushMessage pushover = new PushMessage();
-                    pushover.push(e.getClientNickname() + " has joined the teamspeak server.");
+                    pushover.push(message);
+                    clientDbMap.put(e.getClientId(), api.getClientInfo(e.getClientId()));
                 }
             }
         });
@@ -124,5 +148,21 @@ public class Main {
             }
         });
 
-    }
+        api.addTS3Listeners(new TS3EventAdapter() {
+            @Override
+            public void onClientLeave(ClientLeaveEvent e) {
+                List<Client> clientList = api.getClients();
+                String message = clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
+                        "Clients remaining are:";
+                for(Client cli : clientList){
+                    if(cli.getType() == 0){
+                        message = message.concat("\n" + cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId())
+                                .getName() + ")");
+                    }
+                }
+                PushMessage pushover = new PushMessage();
+                pushover.push(message);
+            }
+        });
+     }
 }
