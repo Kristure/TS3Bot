@@ -6,7 +6,6 @@ import com.github.theholywaffle.teamspeak3.api.TextMessageTargetMode;
 import com.github.theholywaffle.teamspeak3.api.event.*;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Channel;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
-import com.github.theholywaffle.teamspeak3.api.wrapper.DatabaseClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,8 @@ public class Main {
 
     public static void main(String[] args) {
         final TS3Config config = new TS3Config();
-        // config.setHost("104.214.227.48");
-        config.setHost("127.0.0.1");
+        final boolean testing = false;
+        if(testing){config.setHost("104.214.227.48");}else{config.setHost("127.0.0.1");}
         config.setEnableCommunicationsLogging(true);
 
         final TS3Query query = new TS3Query(config);
@@ -106,7 +105,7 @@ public class Main {
         api.addTS3Listeners(new TS3EventAdapter() {
             @Override
             public void onClientJoin(ClientJoinEvent e) {
-                if(api.getClientInfo(e.getClientId()).getDatabaseId() != 1){
+                if(api.getClientInfo(e.getClientId()).getType() == 0){
                     List<Client> clientList = api.getClients();
                     String message = e.getClientNickname() + " has joined the teamspeak server. \n\n" +
                             "The clients connected are now:";
@@ -133,17 +132,18 @@ public class Main {
         api.addTS3Listeners(new TS3EventAdapter() {
             @Override
             public void onClientMoved(ClientMovedEvent e) {
-                if(e.getClientId() == 113) {
-                    PushMessage pushover = new PushMessage();
-                    pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
-                            api.getChannelInfo(e.getTargetChannelId()).getName(), 1);
-                }else if (api.getClientInfo(e.getClientId()).getDatabaseId() == 1){
-                    // Client is serveradmin. Do nothing.
-                }
-                else{
-                    PushMessage pushover = new PushMessage();
-                    pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
-                            api.getChannelInfo(e.getTargetChannelId()).getName());
+                if (api.getClientInfo(e.getClientId()).getType() == 0) {
+                    if (e.getClientId() == 113) {
+                        PushMessage pushover = new PushMessage();
+                        pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
+                                api.getChannelInfo(e.getTargetChannelId()).getName(), 1);
+                    } else if (api.getClientInfo(e.getClientId()).getDatabaseId() == 1) {
+                        // Client is serveradmin. Do nothing.
+                    } else {
+                        PushMessage pushover = new PushMessage();
+                        pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
+                                api.getChannelInfo(e.getTargetChannelId()).getName());
+                    }
                 }
             }
         });
@@ -151,17 +151,19 @@ public class Main {
         api.addTS3Listeners(new TS3EventAdapter() {
             @Override
             public void onClientLeave(ClientLeaveEvent e) {
-                List<Client> clientList = api.getClients();
-                String message = clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
-                        "Clients remaining are:";
-                for(Client cli : clientList){
-                    if(cli.getType() == 0){
-                        message = message.concat("\n" + cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId())
-                                .getName() + ")");
+                if (clientDbMap.get(e.getClientId()).getType() == 0) {
+                    List<Client> clientList = api.getClients();
+                    String message = clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
+                            "Clients remaining are:";
+                    for (Client cli : clientList) {
+                        if (cli.getType() == 0) {
+                            message = message.concat("\n" + cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId())
+                                    .getName() + ")");
+                        }
                     }
+                    PushMessage pushover = new PushMessage();
+                    pushover.push(message);
                 }
-                PushMessage pushover = new PushMessage();
-                pushover.push(message);
             }
         });
      }
