@@ -77,7 +77,7 @@ public class Main {
                             api.createChannel(e.getInvokerName(), properties);
                             Channel newChan = api.getChannelByNameExact(e.getInvokerName(), false);
                             int userDbId = api.getDatabaseClientByUId(e.getInvokerUniqueId()).getDatabaseId();
-                            api.moveQuery(1); // Move query back to default channel<
+                            api.moveQuery(1); // Move query back to default channel
                             api.setClientChannelGroup(5, newChan.getId(), userDbId);
                             api.sendChannelMessage(e.getInvokerName() + ": A channel in your name has been added." +
                                     " Right click your channel to change its properties.");
