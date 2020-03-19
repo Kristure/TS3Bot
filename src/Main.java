@@ -13,8 +13,8 @@ public class Main {
 
     public static void main(String[] args) {
         final TS3Config config = new TS3Config();
-        config.setHost("104.214.227.48");
-        //config.setHost("127.0.0.1");
+        // config.setHost("104.214.227.48");
+        config.setHost("127.0.0.1");
         config.setEnableCommunicationsLogging(true);
 
         final TS3Query query = new TS3Query(config);
@@ -96,8 +96,8 @@ public class Main {
             @Override
             public void onClientJoin(ClientJoinEvent e) {
                 if(api.getClientInfo(e.getClientId()).getDatabaseId() != 1){
-                    api.sendPrivateMessage(e.getClientId(), "Welcome to the new Ouagadougou server. I am a bot" +
-                            " created by the almighty Kristure. " +
+                    api.sendPrivateMessage(e.getClientId(), "Welcome to the new Ouagadougou server. " +
+                            "I am a bot created by the almighty Kristure. " +
                             "To use me, type [b]!help[/b] in the [b]Welcome[/b] channel.");
 
                     PushMessage pushover = new PushMessage();
