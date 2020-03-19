@@ -114,7 +114,7 @@ public class Main {
                     pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
                             api.getChannelInfo(e.getTargetChannelId()).getName(), 1);
                 }else if (api.getClientInfo(e.getClientId()).getDatabaseId() == 1){
-                    // Client is serveradmin. Do nothing
+                    // Client is serveradmin. Do nothing.
                 }
                 else{
                     PushMessage pushover = new PushMessage();
