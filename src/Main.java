@@ -153,7 +153,7 @@ public class Main {
                 if (clientDbMap.get(e.getClientId()).getType() == 0) {
                     ClientStatus clients = new ClientStatus(api);
                     PushMessage pushover = new PushMessage();
-                    pushover.push(clientDbMap.get(e.getClientId()).getNickname() + "just left the server.\n\n" +
+                    pushover.push(clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
                             "Clients remaining are:\n" + clients.get());
                 }
             }
