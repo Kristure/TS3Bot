@@ -16,7 +16,12 @@ public class Main {
     public static void main(String[] args) {
         final TS3Config config = new TS3Config();
         final boolean testing = false;
-        if(testing){config.setHost("104.214.227.48");}else{config.setHost("127.0.0.1");}
+        if(testing){
+            config.setHost("104.214.227.48");
+        }else{
+            config.setHost("127.0.0.1");
+            config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
+        }
         config.setEnableCommunicationsLogging(true);
 
         final TS3Query query = new TS3Query(config);
@@ -106,25 +111,15 @@ public class Main {
             @Override
             public void onClientJoin(ClientJoinEvent e) {
                 if(api.getClientInfo(e.getClientId()).getType() == 0){
-                    List<Client> clientList = api.getClients();
-                    String message = e.getClientNickname() + " has joined the teamspeak server. \n\n" +
-                            "Current clients connected are:";
-                    for(Client cli : clientList){
-                        if(cli.getType() == 0){
-                            message = message.concat("\n" + cli.getNickname() + " (" +
-                                    api.getChannelInfo(cli.getChannelId()
-                            ).getName() + ")");
-                        }
-                    }
-
-                    clientList.clear();
-
+                    // Send welcome message
                     api.sendPrivateMessage(e.getClientId(), "Welcome to the new Ouagadougou server. " +
                             "I am a bot created by the almighty Kristure. " +
                             "To use me, type [b]!help[/b] in the [b]Welcome[/b] channel.");
 
+                    ClientStatus clients = new ClientStatus(api);
                     PushMessage pushover = new PushMessage();
-                    pushover.push(message);
+                    pushover.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
+                            "Current clients connected are:\n" + clients.get());
                     clientDbMap.put(e.getClientId(), api.getClientInfo(e.getClientId()));
                 }
             }
@@ -134,30 +129,19 @@ public class Main {
             @Override
             public void onClientMoved(ClientMovedEvent e) {
                 if (api.getClientInfo(e.getClientId()).getType() == 0) {
-                    if (e.getClientId() == 113) {
-                        List<Client> clientList = api.getClients();
-                        String message = api.getClientInfo(e.getClientId()).getNickname() + "moved to " +
-                                api.getChannelInfo(e.getTargetChannelId()).getName() +".\n\n" +
-                                "Current clients connected are:\n";
-                        for(Client cli : clientList){
-                            message = message.concat(cli.getNickname() + "(" + api.getChannelInfo(cli.getChannelId())
-                                    .getName() + ")\n");
-                        }
+                    if (api.getClientInfo(e.getClientId()).getType() == 0) {
                         PushMessage pushover = new PushMessage();
-                        pushover.push(message, 1);
-                    } else if (api.getClientInfo(e.getClientId()).getDatabaseId() == 1) {
-                        // Client is serveradmin. Do nothing.
-                    } else {
-                        List<Client> clientList = api.getClients();
-                        String message = api.getClientInfo(e.getClientId()).getNickname() + "moved to " +
-                                api.getChannelInfo(e.getTargetChannelId()).getName() +".\n\n" +
-                                "Current clients connected are:\n";
-                        for(Client cli : clientList){
-                            message = message.concat(cli.getNickname() + "(" + api.getChannelInfo(cli.getChannelId())
-                                    .getName() + ")\n");
+                        ClientStatus clients = new ClientStatus(api);
+
+                        if (api.getClientInfo(e.getClientId()).getDatabaseId() == 12){
+                            pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
+                                    api.getChannelInfo(e.getTargetChannelId()).getName() +".\n\n" +
+                                    "Current clients connected are:\n" + clients.get(), 1);
+                        }else{
+                            pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
+                                    api.getChannelInfo(e.getTargetChannelId()).getName() +".\n\n" +
+                                    "Current clients connected are:\n" + clients.get());
                         }
-                        PushMessage pushover = new PushMessage();
-                        pushover.push(message);
                     }
                 }
             }
@@ -167,17 +151,10 @@ public class Main {
             @Override
             public void onClientLeave(ClientLeaveEvent e) {
                 if (clientDbMap.get(e.getClientId()).getType() == 0) {
-                    List<Client> clientList = api.getClients();
-                    String message = clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
-                            "Clients remaining are:";
-                    for (Client cli : clientList) {
-                        if (cli.getType() == 0) {
-                            message = message.concat("\n" + cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId())
-                                    .getName() + ")");
-                        }
-                    }
+                    ClientStatus clients = new ClientStatus(api);
                     PushMessage pushover = new PushMessage();
-                    pushover.push(message);
+                    pushover.push(clientDbMap.get(e.getClientId()).getNickname() + "just left the server.\n\n" +
+                            "Clients remaining are:\n" + clients.get());
                 }
             }
         });
