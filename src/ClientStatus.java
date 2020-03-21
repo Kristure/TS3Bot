@@ -25,7 +25,7 @@ public class ClientStatus  {
 
                 clients = clients.concat(cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId()).getName() +
                         ") (" + micStatus + " | " + outputStatus + ")\n");
-            }a
+            }
         }
     }
 
