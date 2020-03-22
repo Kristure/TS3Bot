@@ -23,8 +23,10 @@ public class ClientStatus  {
                 if(cli.isOutputMuted())
                     outputStatus = "muted";
 
+                String timeConnected = new ConvertTime().convert(api.getClientInfo(cli.getId()).getTimeConnected());
+
                 clients = clients.concat(cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId()).getName() +
-                        ") (" + micStatus + " | " + outputStatus + ")\n");
+                        ") (" + micStatus + " | " + outputStatus + ") (" + timeConnected + ")\n");
             }
         }
     }

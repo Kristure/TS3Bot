@@ -14,6 +14,16 @@ import java.util.Map;
 public class Main {
 
     public static void main(String[] args) {
+        // TODO Create new class to print ClientInfo to csv file.
+        // TODO Create executor class to check these changes every t milliseconds
+        //  - Client.getDatabaseId
+        //  - Client.isOutputMuted
+        //  - Client.isOutputHardware
+        //  - Client.isInputMuted
+        //  - Client.isInputHardware
+        //  - Client.isAway
+
+
         final TS3Config config = new TS3Config();
         final boolean testing = false;
         if(testing){
