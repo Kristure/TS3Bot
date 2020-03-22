@@ -25,7 +25,7 @@ public class Main {
 
 
         final TS3Config config = new TS3Config();
-        final boolean testing = false;
+        final boolean testing = true;
         if(testing){
             config.setHost("104.214.227.48");
         }else{
