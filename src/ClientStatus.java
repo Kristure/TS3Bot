@@ -17,11 +17,16 @@ public class ClientStatus  {
 
                 if(cli.isInputMuted())
                     micStatus = "muted";
-                else if(cli.isAway())
+                if(api.getClientInfo(cli.getId()).isInputHardware())
+                    micStatus = "dis";
+                if(cli.isAway()) {
                     micStatus = "away";
-
+                    outputStatus = "muted";
+                }
                 if(cli.isOutputMuted())
                     outputStatus = "muted";
+                if(api.getClientInfo(cli.getId()).isOutputHardware())
+                    outputStatus = "dis";
 
                 String timeConnected = new ConvertTime().convert(api.getClientInfo(cli.getId()).getTimeConnected());
 

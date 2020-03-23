@@ -10,6 +10,8 @@ public class ConvertTime {
         this.time = round(this.time / 60000, 2);
 
         if(time < 60000)
+            return "now";
+        else if(time < 3600000)
             return this.time + " m";
         else {
             this.time = round(this.time / 60, 2);
