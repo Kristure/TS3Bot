@@ -28,11 +28,12 @@ public class Main {
         final boolean testing = false;
         if(testing){
             config.setHost("104.214.227.48");
+            config.setEnableCommunicationsLogging(true);
         }else{
             config.setHost("127.0.0.1");
             config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
         }
-        config.setEnableCommunicationsLogging(true);
+
 
         final TS3Query query = new TS3Query(config);
         query.connect();
