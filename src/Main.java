@@ -11,9 +11,13 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
@@ -30,7 +34,7 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/realConfig.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
@@ -63,6 +67,17 @@ public class Main {
 
             // Get our own client ID by running "whoami" command.
             final int clientId = api.whoAmI().getId();
+
+            // Start scheduled executor service
+            ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+            Calendar calendar = Calendar.getInstance();
+            int minutes = calendar.get(Calendar.MINUTE);
+            int minutesToNextHour = 60 - minutes;
+            ses.scheduleAtFixedRate(
+                    new ClientList(config, api),
+                    minutesToNextHour, // Initial delay
+                    60, // Delay 60 minutes
+                    TimeUnit.MINUTES);
 
             // Listen to chat in the channel the query is currently in
             // As we never changed the channel, this will be the default channel of the server
