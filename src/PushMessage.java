@@ -11,12 +11,10 @@ public class PushMessage {
 
     void push(String message){
         PushoverClient client = new PushoverRestClient();
-        String pushoverAPI = this.pushoverApi;
-        String pushoverUserId = this.pushoverUserId;
 
         try{
-            client.pushMessage(PushoverMessage.builderWithApiToken(pushoverAPI)
-                    .setUserId(pushoverUserId)
+            client.pushMessage(PushoverMessage.builderWithApiToken(this.pushoverApi)
+                    .setUserId(this.pushoverUserId)
                     .setMessage(message)
                     .build());
         }catch (PushoverException e){
