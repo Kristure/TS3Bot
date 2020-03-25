@@ -1,0 +1,8 @@
+{
+  "testing": true,
+  "queryPassword": "Password123",
+  "server": "1.2.3.4",
+  "queryPort": 10011,
+  "pushoverApi": "pushoverApi",
+  "pushoverUserId": "pushoverUserId"
+}
