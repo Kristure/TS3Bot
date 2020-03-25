@@ -1,6 +1,14 @@
 import net.pushover.client.*;
 
 public class PushMessage {
+    private String pushoverApi;
+    private String pushoverUserId;
+
+    public PushMessage(String pushoverApi, String pushoverUserId) {
+        this.pushoverApi = pushoverApi;
+        this.pushoverUserId = pushoverUserId;
+    }
+
     void push(String message){
         PushoverClient client = new PushoverRestClient();
         String pushoverAPI = "aditr8h74zjadxxpwuc5s8ni28qsg5";
