@@ -114,8 +114,9 @@ public class Main {
                                 api.sendChannelMessage(e.getInvokerName() + ": A channel in your name has been added." +
                                         " Right click your channel to change its properties.");
                             } else {
-                                api.sendChannelMessage(e.getInvokerName() + ": There already exist a channel with your " +
-                                        "name. Right click it and change its name and before you try this command again.");
+                                api.sendChannelMessage(e.getInvokerName() + ": There already exist a channel with" +
+                                        " your name. Right click it and change its name and before you try this " +
+                                        "command again.");
                             }
 
                         }
