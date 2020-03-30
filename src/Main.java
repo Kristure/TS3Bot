@@ -34,20 +34,15 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/test/realConfig.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
             final TS3Config ts3Config = new TS3Config();
-            if (config.testing) {
-                ts3Config.setHost(config.server);
-                ts3Config.setQueryPort(config.queryPort);
+            ts3Config.setHost(config.server);
+            ts3Config.setQueryPort(config.queryPort);
+            if (config.testing)
                 ts3Config.setEnableCommunicationsLogging(true);
-            } else {
-                ts3Config.setHost("127.0.0.1");
-                ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
-            }
-
 
             final TS3Query query = new TS3Query(ts3Config);
             query.connect();
