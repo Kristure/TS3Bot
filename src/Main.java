@@ -34,7 +34,7 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/test/realConfig.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
