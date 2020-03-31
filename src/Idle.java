@@ -31,6 +31,9 @@ public class Idle implements Runnable {
 
     private void idleChange () {
         clientList = api.getClients();
+
+        ClientStatus clientStatus = new ClientStatus(api);
+
         for(Client cli : clientList){
             if(cli.getType()!=0) continue;
             ConvertTime time = new ConvertTime();
@@ -46,12 +49,14 @@ public class Idle implements Runnable {
                     pushMessage.push(
                             cli.getNickname() +
                                     " is back from being idle for "
-                                    + time.convert(clientMap.get(cli.getId()).getIdleTime()));
+                                    + time.convert(clientMap.get(cli.getId()).getIdleTime()) + "\n\n"
+                                    + clientStatus.get());
                 }
             }else{
                 if(cli.getIdleTime() > this.maxIdleValue){
                     PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
-                    pushMessage.push(cli.getNickname() + " is now idle!");
+                    pushMessage.push(cli.getNickname() + " is now idle!" + "\n\n"
+                            + clientStatus.get());
                 }
             }
             updateMap();
