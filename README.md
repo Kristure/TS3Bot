@@ -6,6 +6,6 @@ Functionality:
 * Welcome message
 * Summon serveradmin via pushover
 * Send notification via pushover on
-* Server join
-* Server leave
-* Channel change
+  * Server join
+  * Server leave
+  * Channel change
