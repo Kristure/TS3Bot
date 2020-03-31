@@ -18,7 +18,7 @@ public class PushMessage {
                     .setMessage(message)
                     .build());
         }catch (PushoverException e){
-            // Do nothing
+            System.err.println(e.getMessage());
         }
     }
     void push(String message, int priority){
@@ -33,7 +33,7 @@ public class PushMessage {
                     .setPriority(MessagePriority.HIGH)
                     .build());
         }catch (PushoverException e){
-            // Do nothing
+            System.err.println(e.getMessage());
         }
     }
 }
