@@ -43,9 +43,9 @@ public class Main {
             ts3Config.setQueryPort(config.queryPort);
             if (config.testing)
                 ts3Config.setEnableCommunicationsLogging(true);
-            if (config.server == "127.0.0.1"){
+            if (config.server == "127.0.0.1")
                 ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
-            }
+
 
             final TS3Query query = new TS3Query(ts3Config);
             query.connect();
