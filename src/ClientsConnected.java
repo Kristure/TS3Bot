@@ -3,10 +3,10 @@ import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 
 import java.util.List;
 
-public class ClientStatus  {
+public class ClientsConnected {
     private String clients = "";
 
-    public ClientStatus(TS3Api api) {
+    public ClientsConnected(TS3Api api) {
         List<Client> clientList = api.getClients();
 
         for (Client cli: clientList){

@@ -29,12 +29,11 @@ public class Main {
         //  - Client.isOutputHardware
         //  - Client.isInputMuted
         //  - Client.isInputHardware
-        //  - Client.isAway
 
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/Test/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
@@ -47,6 +46,9 @@ public class Main {
                 ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
                 System.out.println("Floodrate is set to UNLIMITED");
             }
+
+            // TESTING
+            ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
 
 
             final TS3Query query = new TS3Query(ts3Config);
@@ -72,16 +74,16 @@ public class Main {
             ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
             Calendar calendar = Calendar.getInstance();
             int minutes = calendar.get(Calendar.MINUTE);
-            int minutesToNextHour = 60 - minutes;
+            int initialDelay = 60 - minutes;
             ses.scheduleAtFixedRate(
-                    new ClientList(config, api),
-                    minutesToNextHour, // Initial delay
+                    new ServerStatus(config, api),
+                    initialDelay, // Initial delay
                     60, // Delay 60 minutes
                     TimeUnit.MINUTES);
 
             // Start scheduled executor service
             ScheduledExecutorService ses2 = Executors.newScheduledThreadPool(1);
-            ses.scheduleAtFixedRate(new Idle(api, config), 5, 5, TimeUnit.SECONDS);
+            ses2.scheduleAtFixedRate(new Idle(api, config), 5, 5, TimeUnit.SECONDS);
 
             // Listen to chat in the channel the query is currently in
             // As we never changed the channel, this will be the default channel of the server
@@ -152,7 +154,7 @@ public class Main {
                                 "I am a bot created by the almighty Kristure. " +
                                 "To use me, type [b]!help[/b] in the [b]Welcome[/b] channel.");
 
-                        ClientStatus clients = new ClientStatus(api);
+                        ClientsConnected clients = new ClientsConnected(api);
                         PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
                         pushover.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
                                 "Current clients connected are:\n" + clients.get());
@@ -167,7 +169,7 @@ public class Main {
                     if (api.getClientInfo(e.getClientId()).getType() == 0) {
                         if (api.getClientInfo(e.getClientId()).getType() == 0) {
                             PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
-                            ClientStatus clients = new ClientStatus(api);
+                            ClientsConnected clients = new ClientsConnected(api);
 
                             if (api.getClientInfo(e.getClientId()).getDatabaseId() == 12) {
                                 pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
@@ -187,7 +189,7 @@ public class Main {
                 @Override
                 public void onClientLeave(ClientLeaveEvent e) {
                     if (clientDbMap.get(e.getClientId()).getType() == 0) {
-                        ClientStatus clients = new ClientStatus(api);
+                        ClientsConnected clients = new ClientsConnected(api);
                         PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
                         pushover.push(clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
                                 "Clients remaining are:\n" + clients.get());
