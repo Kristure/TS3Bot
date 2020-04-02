@@ -33,7 +33,7 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/Test/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
@@ -46,9 +46,6 @@ public class Main {
                 ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
                 System.out.println("Floodrate is set to UNLIMITED");
             }
-
-            // TESTING
-            ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
 
 
             final TS3Query query = new TS3Query(ts3Config);
