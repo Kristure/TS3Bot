@@ -51,7 +51,7 @@ public class Main {
             query.connect();
 
             final TS3Api api = query.getApi();
-            api.login("serveradmin", config.queryPassword);
+            api.login(config.queryUsername, config.queryPassword);
             api.selectVirtualServerById(1);
             api.setNickname("ArmandBot");
 
