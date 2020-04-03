@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Idle implements Runnable {
+public class IdleCheck implements Runnable {
 
     private List<Client> clientList;
     private Map<Integer, Client> clientMap = new HashMap<>();
@@ -13,7 +13,7 @@ public class Idle implements Runnable {
     private Config config;
     private Integer maxIdleValue = 60000*5;
 
-    public Idle(TS3Api api, Config config) {
+    public IdleCheck(TS3Api api, Config config) {
         this.api = api;
         this.config = config;
 
