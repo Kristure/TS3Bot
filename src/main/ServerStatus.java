@@ -12,9 +12,7 @@ public class ServerStatus implements Runnable {
     }
 
     private void sendMessage() {
-        // One client will always be the bot
-        // TODO Make class to count non query clients
-        if(api.getClients().size() > 2){
+        if(CountNormalUsers.Users(api) > 1){
             PushMessage pushMessage = new PushMessage(this.config.pushoverApi, this.config.pushoverUserId);
             ClientsConnected clientsConnected = new ClientsConnected(api);
 

@@ -14,8 +14,9 @@ public class ConvertTime {
         if(time < 1000)
             return "now";
         else if(time < 60000){
-            this.time = (long)round(this.time, 0);
-            return this.time + " s";
+            int seconds = (int) round(this.time, 0);
+            String secondsConverted = new ConcatTime().convert(seconds);
+            return secondsConverted + " s";
         }
         else if(time < 3600000) {
             int minutes = (int)round(this.time / 60, 0);
