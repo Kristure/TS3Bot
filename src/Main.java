@@ -77,7 +77,7 @@ public class Main {
 
             // Start scheduled executor service
             ScheduledExecutorService ses2 = Executors.newScheduledThreadPool(1);
-            ses2.scheduleAtFixedRate(new Idle(api, config), 5, 5, TimeUnit.SECONDS);
+            ses2.scheduleAtFixedRate(new IdleCheck(api, config), 5, 5, TimeUnit.SECONDS);
 
             // Listen to chat in the channel the query is currently in
             // As we never changed the channel, this will be the default channel of the server
