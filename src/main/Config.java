@@ -1,3 +1,5 @@
+package main;
+
 public class Config {
     public Boolean testing;
     public String queryPassword;

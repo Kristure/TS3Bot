@@ -1,3 +1,5 @@
+package main;
+
 import net.pushover.client.*;
 
 public class PushMessage {
