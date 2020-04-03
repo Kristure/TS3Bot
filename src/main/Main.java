@@ -32,6 +32,7 @@ public class Main {
         //  - Client.isOutputHardware
         //  - Client.isInputMuted
         //  - Client.isInputHardware
+        // TODO Update pushover4j to the latest version
 
         // Get config from file
         try {
