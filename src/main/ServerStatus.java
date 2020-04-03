@@ -1,6 +1,7 @@
 package main;
 
 import com.github.theholywaffle.teamspeak3.TS3Api;
+import net.pushover.client.MessagePriority;
 
 public class ServerStatus implements Runnable {
     private Config config;
@@ -18,7 +19,7 @@ public class ServerStatus implements Runnable {
 
             String message = "Clients:\n";
             message = message.concat(clientsConnected.get());
-            pushMessage.push(message);
+            pushMessage.push(message, MessagePriority.QUIET);
         }
     }
 
