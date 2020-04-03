@@ -1,3 +1,5 @@
+package main;
+
 public class ConcatTime {
     public String convert(int value){
         if(value < 10){

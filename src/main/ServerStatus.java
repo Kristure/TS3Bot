@@ -1,3 +1,5 @@
+package main;
+
 import com.github.theholywaffle.teamspeak3.TS3Api;
 
 public class ServerStatus implements Runnable {
