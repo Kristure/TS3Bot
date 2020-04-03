@@ -1,6 +1,7 @@
 {
   "testing": true,
   "floodRateUnlimited": false,
+  "queryUsername": "serveradmin",
   "queryPassword": "Password123",
   "server": "1.2.3.4",
   "queryPort": 10011,
