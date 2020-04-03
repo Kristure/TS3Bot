@@ -9,6 +9,7 @@ import com.github.theholywaffle.teamspeak3.api.event.*;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Channel;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 import com.google.gson.Gson;
+import net.pushover.client.MessagePriority;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -170,7 +171,7 @@ public class Main {
                             if (api.getClientInfo(e.getClientId()).getDatabaseId() == 12) {
                                 pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
                                         api.getChannelInfo(e.getTargetChannelId()).getName() + ".\n\n" +
-                                        "Current clients connected are:\n" + clients.get(), 1);
+                                        "Current clients connected are:\n" + clients.get(), MessagePriority.HIGH);
                             } else {
                                 pushover.push(api.getClientInfo(e.getClientId()).getNickname() + " moved to " +
                                         api.getChannelInfo(e.getTargetChannelId()).getName() + ".\n\n" +

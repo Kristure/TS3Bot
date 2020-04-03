@@ -23,16 +23,15 @@ public class PushMessage {
             System.err.println(e.getMessage());
         }
     }
-    void push(String message, int priority){
+
+    void push(String message, MessagePriority messagePriority){
         PushoverClient client = new PushoverRestClient();
-        String pushoverAPI = this.pushoverApi;
-        String pushoverUserId = this.pushoverUserId;
 
         try{
-            client.pushMessage(PushoverMessage.builderWithApiToken(pushoverAPI)
-                    .setUserId(pushoverUserId)
+            client.pushMessage(PushoverMessage.builderWithApiToken(this.pushoverApi)
+                    .setUserId(this.pushoverUserId)
                     .setMessage(message)
-                    .setPriority(MessagePriority.HIGH)
+                    .setPriority(messagePriority)
                     .build());
         }catch (PushoverException e){
             System.err.println(e.getMessage());
