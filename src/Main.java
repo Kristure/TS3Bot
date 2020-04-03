@@ -33,20 +33,17 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/Test/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
             final TS3Config ts3Config = new TS3Config();
             ts3Config.setHost(config.server);
             ts3Config.setQueryPort(config.queryPort);
+            if (config.floodRateUnlimited)
+                ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
             if (config.testing)
                 ts3Config.setEnableCommunicationsLogging(true);
-            if (config.server.equals("127.0.0.1")) {
-                ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
-                System.out.println("Floodrate is set to UNLIMITED");
-            }
-
 
             final TS3Query query = new TS3Query(ts3Config);
             query.connect();
