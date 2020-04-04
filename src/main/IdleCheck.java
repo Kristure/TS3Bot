@@ -13,7 +13,6 @@ public class IdleCheck implements Runnable {
     private Map<Integer, Client> clientMap = new HashMap<>();
     private TS3Api api;
     private Config config;
-    private Integer maxIdleValue = 60000*5;
 
     public IdleCheck(TS3Api api, Config config) {
         this.api = api;
@@ -44,8 +43,10 @@ public class IdleCheck implements Runnable {
             long newTime = cli.getIdleTime();
 
 
-            if(clientMap.get(cli.getId()).getIdleTime() > this.maxIdleValue){
-                if(oldTime - newTime > this.maxIdleValue){
+            // Set maxIdleValue
+            int maxIdleValue = 60000 * 5;
+            if(clientMap.get(cli.getId()).getIdleTime() > maxIdleValue){
+                if(oldTime - newTime > maxIdleValue){
 
                     PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
                     pushMessage.push(
@@ -55,7 +56,7 @@ public class IdleCheck implements Runnable {
                                     + clientsConnected.get());
                 }
             }else{
-                if(cli.getIdleTime() > this.maxIdleValue){
+                if(cli.getIdleTime() > maxIdleValue){
                     PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
                     pushMessage.push(cli.getNickname() + " is now idle!" + "\n\n"
                             + clientsConnected.get());
