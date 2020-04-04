@@ -10,7 +10,14 @@ public class Config {
     public boolean floodRateUnlimited;
     public String queryUsername;
 
-    public Config(Boolean testing, String queryUsername, Boolean floodRateUnlimited, String queryPassword, String server, Integer queryPort, String pushover_api, String pushover_user_id) {
+    public Config(Boolean testing,
+                  String queryUsername,
+                  Boolean floodRateUnlimited,
+                  String queryPassword,
+                  String server,
+                  Integer queryPort,
+                  String pushover_api,
+                  String pushover_user_id) {
         this.testing = testing;
         this.queryUsername = queryUsername;
         this.floodRateUnlimited = floodRateUnlimited;
