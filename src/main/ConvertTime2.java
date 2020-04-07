@@ -3,6 +3,7 @@ package main;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.concurrent.TimeUnit;
 
 public class ConvertTime2 {
     private Long milliseconds;
@@ -14,9 +15,12 @@ public class ConvertTime2 {
     }
 
     public void toSeconds(){
-        BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
+        /*BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
         bd = bd.divide(BigDecimal.valueOf(1000), 2, RoundingMode.HALF_UP);
-        this.time = bd.doubleValue();
+        this.time = bd.doubleValue();*/
+
+        this.time = (double)TimeUnit.MILLISECONDS.toSeconds(this.milliseconds);
+
     }
 
     public void toSeconds(int decimals){
