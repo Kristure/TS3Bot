@@ -11,4 +11,8 @@ public class ConvertTime {
 
         return formatted;
     }
+
+    public static Long toHours(long time){
+        return TimeUnit.MILLISECONDS.toHours(time);
+    }
 }
