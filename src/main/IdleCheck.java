@@ -31,6 +31,9 @@ public class IdleCheck implements Runnable {
     }
 
     private void idleChange () {
+        // Set maxIdleValue
+        long maxIdleSeconds = 60 * 5;
+
         clientList = api.getClients();
 
         ClientsConnected clientsConnected = new ClientsConnected(api);
@@ -41,11 +44,8 @@ public class IdleCheck implements Runnable {
             long oldIdleTimeInSeconds = TimeUnit.MILLISECONDS.toSeconds(clientMap.get(cli.getId()).getIdleTime());
             long oldIdleTime = clientMap.get(cli.getId()).getIdleTime();
             long idleTimeInSeconds = TimeUnit.MILLISECONDS.toSeconds(cli.getIdleTime());
-            long idleTime = cli.getIdleTime();
 
 
-            // Set maxIdleValue
-            long maxIdleSeconds = 60 * 5;
             if(idleTimeInSeconds >= maxIdleSeconds && idleTimeInSeconds < maxIdleSeconds + 5){
                 PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
                 pushMessage.push(cli.getNickname() + " is now idle!" + "\n\n"

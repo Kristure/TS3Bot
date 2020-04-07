@@ -1,5 +1,6 @@
 package main;
 
+import main.ConvertTime;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,5 +25,10 @@ class ConvertTimeTest {
     @Test
     void convertMixed() {
         assertEquals("15:07:56", ConvertTime.convert(54476000));
+    }
+
+    @Test
+    void oneThousandHours() {
+        assertEquals(1000, ConvertTime.toHours(3600000000L));
     }
 }
