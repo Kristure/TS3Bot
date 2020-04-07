@@ -15,30 +15,38 @@ public class ConvertTime2 {
 
     public void toSeconds(){
         BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
-        bd.divide()
+        bd = bd.divide(BigDecimal.valueOf(1000), 2, RoundingMode.HALF_UP);
+        this.time = bd.doubleValue();
     }
 
     public void toSeconds(int decimals){
-        double value = (double)this.milliseconds / 1000;
-        round(value, decimals);
+        BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
+        bd = bd.divide(BigDecimal.valueOf(1000), decimals, RoundingMode.HALF_UP);
+        this.time = bd.doubleValue();
     }
 
     public void toMinutes(){
-        double value = (double)this.milliseconds / 60000;
-        this.round(value,2);
+        BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
+        bd = bd.divide(BigDecimal.valueOf(1000), 2, RoundingMode.HALF_UP);
+        this.time = bd.doubleValue();
     }
 
     public void toMinutes(int decimals){
-        double value = (double)this.milliseconds / 60000;
-        this.round(value, decimals);
+        BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
+        bd = bd.divide(BigDecimal.valueOf(60000), decimals, RoundingMode.HALF_UP);
+        this.time = bd.doubleValue();
     }
 
-    private double round(double value, int decimals){
-        if (decimals < 0) throw new IllegalArgumentException();
-
+    public void toHours(){
         BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
-        bd = bd.setScale(decimals, RoundingMode.HALF_UP);
-        return bd.doubleValue();
+        bd = bd.divide(BigDecimal.valueOf(60000*60), 2, RoundingMode.HALF_UP);
+        this.time = bd.doubleValue();
+    }
+
+    public void toHours(int decimals){
+        BigDecimal bd = BigDecimal.valueOf(this.milliseconds);
+        bd = bd.divide(BigDecimal.valueOf(60000*60), decimals, RoundingMode.HALF_UP);
+        this.time = bd.doubleValue();
     }
 
     public double getConverted() {
