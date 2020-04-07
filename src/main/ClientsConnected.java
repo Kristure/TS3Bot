@@ -4,7 +4,6 @@ import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ClientsConnected {
     private String clients = "";
@@ -34,16 +33,10 @@ public class ClientsConnected {
                 if(!api.getClientInfo(cli.getId()).isOutputHardware())
                     outputStatus = "dis";
 
-                // String timeConnected = new ConvertTime().convert(api.getClientInfo(cli.getId()).getTimeConnected());
                 long timeConnected = api.getClientInfo(cli.getId()).getTimeConnected();
-                String timeConnectedString = String.format("%02d:%02d:%02d",
-                        TimeUnit.MILLISECONDS.toHours(timeConnected),
-                        TimeUnit.MILLISECONDS.toMinutes(timeConnected) % TimeUnit.HOURS.toMinutes(1),
-                        TimeUnit.MILLISECONDS.toSeconds(timeConnected) % TimeUnit.MINUTES.toSeconds(1));
-
 
                 clients = clients.concat(cli.getNickname() + " (" + api.getChannelInfo(cli.getChannelId()).getName() +
-                        ") (" + micStatus + " | " + outputStatus + ") (" + timeConnectedString + ")\n");
+                        ") (" + micStatus + " | " + outputStatus + ") (" + ConvertTime.convert(timeConnected) + ")\n");
             }
         }
     }

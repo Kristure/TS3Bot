@@ -6,6 +6,7 @@ import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class IdleCheck implements Runnable {
 
@@ -19,7 +20,6 @@ public class IdleCheck implements Runnable {
         this.config = config;
 
         updateMap();
-
     }
 
     private void updateMap(){
@@ -37,34 +37,31 @@ public class IdleCheck implements Runnable {
 
         for(Client cli : clientList){
             if(cli.getType()!=0) continue;
-            ConvertTime time = new ConvertTime();
 
-            long oldTime = clientMap.get(cli.getId()).getIdleTime();
-            long newTime = cli.getIdleTime();
+            long oldIdleTimeInSeconds = TimeUnit.MILLISECONDS.toSeconds(clientMap.get(cli.getId()).getIdleTime());
+            long oldIdleTime = clientMap.get(cli.getId()).getIdleTime();
+            long idleTimeInSeconds = TimeUnit.MILLISECONDS.toSeconds(cli.getIdleTime());
+            long idleTime = cli.getIdleTime();
 
 
             // Set maxIdleValue
-            int maxIdleValue = 60000 * 5;
-            if(clientMap.get(cli.getId()).getIdleTime() > maxIdleValue){
-                if(oldTime - newTime > maxIdleValue){
+            long maxIdleSeconds = 60 * 5;
+            if(idleTimeInSeconds >= maxIdleSeconds && idleTimeInSeconds < maxIdleSeconds + 5){
+                PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                pushMessage.push(cli.getNickname() + " is now idle!" + "\n\n"
+                        + clientsConnected.get());
 
-                    PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
-                    pushMessage.push(
-                            cli.getNickname() +
-                                    " is back from being idle for "
-                                    + time.convert(clientMap.get(cli.getId()).getIdleTime()) + "\n\n"
-                                    + clientsConnected.get());
-                }
-            }else{
-                if(cli.getIdleTime() > maxIdleValue){
-                    PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
-                    pushMessage.push(cli.getNickname() + " is now idle!" + "\n\n"
-                            + clientsConnected.get());
-                }
             }
-            updateMap();
+            if(idleTimeInSeconds < maxIdleSeconds && oldIdleTimeInSeconds >= maxIdleSeconds){
+                PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                pushMessage.push(
+                        cli.getNickname() +
+                                " is back from being idle for "
+                                + ConvertTime.convert(oldIdleTime) + "\n\n"
+                                + clientsConnected.get());
+            }
         }
-
+        updateMap();
     }
 
     @Override
