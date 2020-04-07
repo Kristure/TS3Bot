@@ -37,7 +37,7 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/Test/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
@@ -74,7 +74,7 @@ public class Main {
             int minutes = calendar.get(Calendar.MINUTE);
             int initialDelay = 60 - minutes;
             ses.scheduleAtFixedRate(
-                    new ServerStatus(config, api),
+                    new HourlyCheck(config, api),
                     initialDelay, // Initial delay
                     60, // Delay 60 minutes
                     TimeUnit.MINUTES);

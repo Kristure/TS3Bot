@@ -3,9 +3,9 @@ package main;
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import net.pushover.client.MessagePriority;
 
-public class ServerStatus implements Runnable {
-    private Config config;
-    private TS3Api api;
+public class ServerStatus{
+    private final Config config;
+    private final TS3Api api;
 
     public ServerStatus(Config config, TS3Api api) {
         this.config = config;
@@ -23,7 +23,6 @@ public class ServerStatus implements Runnable {
         }
     }
 
-    @Override
     public void run() {
         sendMessage();
     }
