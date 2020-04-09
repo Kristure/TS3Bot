@@ -37,7 +37,7 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/Test/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
@@ -69,19 +69,8 @@ public class Main {
             final int clientId = api.whoAmI().getId();
 
             // Start scheduled executor service
-            ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
-            Calendar calendar = Calendar.getInstance();
-            int minutes = calendar.get(Calendar.MINUTE);
-            int initialDelay = 60 - minutes;
-            ses.scheduleAtFixedRate(
-                    new HourlyCheck(config, api),
-                    initialDelay, // Initial delay
-                    60, // Delay 60 minutes
-                    TimeUnit.MINUTES);
-
-            // Start scheduled executor service
-            ScheduledExecutorService ses2 = Executors.newScheduledThreadPool(1);
-            ses2.scheduleAtFixedRate(new IdleCheck(api, config), 5, 5, TimeUnit.SECONDS);
+           Scheduler scheduler = new Scheduler(api, config);
+           scheduler.startAll();
 
             // Listen to chat in the channel the query is currently in
             // As we never changed the channel, this will be the default channel of the server

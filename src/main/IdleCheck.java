@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class IdleCheck implements Runnable {
+public class IdleCheck {
 
     private List<Client> clientList;
     private Map<Integer, Client> clientMap = new HashMap<>();
@@ -64,7 +64,6 @@ public class IdleCheck implements Runnable {
         updateMap();
     }
 
-    @Override
     public void run() {
         idleChange();
     }
