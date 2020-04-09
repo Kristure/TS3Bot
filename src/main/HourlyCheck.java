@@ -7,6 +7,7 @@ public class HourlyCheck implements Runnable {
     private final Config config;
     private ServerStatus serverStatus;
     private Achievements achievements;
+    private Prank prank;
 
     public HourlyCheck(Config config, TS3Api api) {
         this.api = api;
@@ -20,5 +21,6 @@ public class HourlyCheck implements Runnable {
     public void run() {
         this.serverStatus.run();
         this.achievements.thousandHours();
+        Prank.doPrank(this.api);
     }
 }
