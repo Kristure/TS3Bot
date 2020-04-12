@@ -52,7 +52,7 @@ public class IdleCheck {
                         + clientsConnected.get());
 
             }
-            if(idleTimeInSeconds < maxIdleSeconds && oldIdleTimeInSeconds >= maxIdleSeconds){
+            if(idleTimeInSeconds < 6 && oldIdleTimeInSeconds >= maxIdleSeconds){
                 PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
                 pushMessage.push(
                         cli.getNickname() +
