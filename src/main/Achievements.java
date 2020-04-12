@@ -17,37 +17,6 @@ public class Achievements {
         this.api = api;
     }
 
-    public void oneHour() {
-        List<Client> clientList = api.getClients();
-
-        for (Client cli : clientList){
-            long hoursConnected = ConvertTime.toHours(api.getClientInfo(cli.getId()).getTimeConnected());
-            if(hoursConnected == 1){
-                api.sendServerMessage(String.format("%s has been connected for 1 hours. Congratulations!",
-                        cli.getNickname()));
-
-                PushMessage pushMessage = new PushMessage(this.pushoverApi, this.pushoverUserId);
-                pushMessage.push(String.format("%s has been connected for 1 hours.", cli.getNickname()),
-                        MessagePriority.HIGH);
-            }
-        }
-    }
-
-    public void hundredHours() {
-        List<Client> clientList = api.getClients();
-
-        for (Client cli : clientList){
-            long hoursConnected = ConvertTime.toHours(api.getClientInfo(cli.getId()).getTimeConnected());
-            if(hoursConnected == 100){
-                api.sendServerMessage(String.format("%s has been connected for 100 hours. Congratulations!",
-                        cli.getNickname()));
-
-                PushMessage pushMessage = new PushMessage(this.pushoverApi, this.pushoverUserId);
-                pushMessage.push(String.format("%s has been connected for 100 hours.", cli.getNickname()),
-                        MessagePriority.HIGH);
-            }
-        }
-    }
 
     public void thousandHours() {
         List<Client> clientList = api.getClients();
@@ -57,6 +26,7 @@ public class Achievements {
             if(hoursConnected == 1000){
                 api.sendServerMessage(String.format("%s has been connected for 1000 hours. Congratulations!",
                         cli.getNickname()));
+                api.pokeClient(cli.getId(),"Congrats! You have been connected for 1000 hours.");
 
                 PushMessage pushMessage = new PushMessage(this.pushoverApi, this.pushoverUserId);
                 pushMessage.push(String.format("%s has been connected for 1000 hours.", cli.getNickname()),

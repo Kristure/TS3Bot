@@ -20,7 +20,6 @@ public class HourlyCheck implements Runnable {
     public void run() {
         this.serverStatus.run();
         this.achievements.thousandHours();
-        this.achievements.hundredHours();
-        this.achievements.oneHour();
+
     }
 }
