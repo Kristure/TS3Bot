@@ -13,7 +13,9 @@ public class FiveSecCheck implements Runnable {
 
     @Override
     public void run() {
-        IdleCheck idleCheck = new IdleCheck(this.api, this.config);
-        idleCheck.run();
+//        IdleCheck idleCheck = new IdleCheck(this.api, this.config);
+//        idleCheck.run();
+        IdleCheck2 idleCheck2 = new IdleCheck2(this.api, this.config);
+        idleCheck2.run();
     }
 }

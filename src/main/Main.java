@@ -37,7 +37,7 @@ public class Main {
         // Get config from file
         try {
             Gson json = new Gson();
-            Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
+            Reader reader = Files.newBufferedReader(Paths.get("config/Test/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
 
@@ -146,6 +146,7 @@ public class Main {
                         pushover.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
                                 "Current clients connected are:\n" + clients.get());
                         clientDbMap.put(e.getClientId(), api.getClientInfo(e.getClientId()));
+                        ClientIdle.idleMap.put(e.getClientId(), false);
                     }
                 }
             });
@@ -180,6 +181,7 @@ public class Main {
                         PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
                         pushover.push(clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
                                 "Clients remaining are:\n" + clients.get());
+                        ClientIdle.idleMap.remove(e.getClientId());
                     }
                 }
             });
