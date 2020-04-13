@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class Scheduler {
     private final TS3Api api;
     private final Config config;
-    private ScheduledExecutorService fiveSecScheduler;
+    private ScheduledExecutorService tenSecScheduler;
     private ScheduledExecutorService minuteScheduler;
     private ScheduledExecutorService hourlyScheduler;
 
@@ -43,13 +43,13 @@ public class Scheduler {
     }
 
     private void fiveSecondsScheduler (){
-        fiveSecScheduler = Executors.newScheduledThreadPool(1);
+        tenSecScheduler = Executors.newScheduledThreadPool(1);
         Calendar calendar = Calendar.getInstance();
         int milliseconds = calendar.get(Calendar.MILLISECOND);
         int milliSecondsToSecond = 1000 - milliseconds;
-        fiveSecScheduler.scheduleAtFixedRate(new FiveSecCheck(this.config, this.api),
+        tenSecScheduler.scheduleAtFixedRate(new TenSecScheduler(this.config, this.api),
                 milliSecondsToSecond,
-                5000,
+                10000,
                 TimeUnit.MILLISECONDS);
     }
 
@@ -63,6 +63,6 @@ public class Scheduler {
     public void stopAll(){
         hourlyScheduler.shutdown();
         minuteScheduler.shutdown();
-        fiveSecScheduler.shutdown();
+        tenSecScheduler.shutdown();
     }
 }

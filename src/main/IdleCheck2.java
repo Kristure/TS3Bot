@@ -13,7 +13,7 @@ public class IdleCheck2 {
     private final Config config;
     private Map<Integer, Client> clientMap = new HashMap<>();
     private List<Client> clientList;
-    public static Boolean justConnected = true;
+    private static Boolean justConnected = true;
 
     public IdleCheck2(TS3Api api, Config config) {
         this.api = api;
@@ -23,7 +23,6 @@ public class IdleCheck2 {
     }
 
     private void updateMap() {
-        clientMap.clear();
         clientList = api.getClients();
         for(Client cli : clientList){
             clientMap.put(cli.getId(), cli);
@@ -32,13 +31,13 @@ public class IdleCheck2 {
 
 
     private void idleChange() {
-        long maxIdleSeconds = 60 * 5;
+        long maxIdleSeconds = 30;
 
         ClientsConnected clientsConnected = new ClientsConnected(api);
 
         if(justConnected){
             for (Client cli : clientList){
-                if (cli.getIdleTime() > (long)TimeUnit.SECONDS.toMillis(maxIdleSeconds)) {
+                if (cli.getIdleTime() > TimeUnit.SECONDS.toMillis(maxIdleSeconds)) {
                     ClientIdle.idleMap.put(cli.getId(), true);
                 } else {
                     ClientIdle.idleMap.put(cli.getId(), false);
@@ -55,7 +54,7 @@ public class IdleCheck2 {
 
             long oldIdleTime = clientMap.get(cli.getId()).getIdleTime();
 
-            System.out.printf("%s %d", cli.getNickname(), cli.getIdleTime());
+            System.out.printf("%s %s", cli.getNickname(), ConvertTime.convert(cli.getIdleTime()));
             System.out.println(" " + ClientIdle.idleMap.get(cli.getId()));
             if(cli.getIdleTime() > TimeUnit.SECONDS.toMillis(maxIdleSeconds) && !ClientIdle.idleMap.get(cli.getId())){
                 PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
