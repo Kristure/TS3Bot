@@ -57,6 +57,7 @@ public class Scheduler {
         hourlyScheduler();
         minuteScheduler();
         fiveSecondsScheduler();
+        ClientIdle.updateMap(api);
     }
 
     public void stopAll(){
