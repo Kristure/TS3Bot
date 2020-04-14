@@ -42,21 +42,21 @@ public class Scheduler {
                 TimeUnit.SECONDS);
     }
 
-    private void fiveSecondsScheduler (){
+    private void fiveSecScheduler(){
         tenSecScheduler = Executors.newScheduledThreadPool(1);
         Calendar calendar = Calendar.getInstance();
         int milliseconds = calendar.get(Calendar.MILLISECOND);
         int milliSecondsToSecond = 1000 - milliseconds;
-        tenSecScheduler.scheduleAtFixedRate(new TenSecScheduler(this.config, this.api),
+        tenSecScheduler.scheduleAtFixedRate(new FiveSecScheduler(this.config, this.api),
                 milliSecondsToSecond,
-                10000,
+                1000,
                 TimeUnit.MILLISECONDS);
     }
 
     public void startAll(){
         hourlyScheduler();
         minuteScheduler();
-        fiveSecondsScheduler();
+        fiveSecScheduler();
         ClientIdle.updateMap(api);
     }
 
