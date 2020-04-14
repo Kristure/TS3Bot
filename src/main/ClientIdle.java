@@ -21,7 +21,7 @@ public class ClientIdle {
     public static void updateMap(TS3Api api){
         clientList = api.getClients();
         for (Client cli : clientList){
-            idleMap.put(cli.getId(), false);
+            ClientIdle.idleMap.put(cli.getId(), false);
         }
     }
 }

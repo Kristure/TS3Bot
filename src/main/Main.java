@@ -147,6 +147,7 @@ public class Main {
                                 "Current clients connected are:\n" + clients.get());
                         clientDbMap.put(e.getClientId(), api.getClientInfo(e.getClientId()));
                         ClientIdle.idleMap.put(e.getClientId(), false);
+                        IdleCheck2.update(api);
                     }
                 }
             });
@@ -182,6 +183,7 @@ public class Main {
                         pushover.push(clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
                                 "Clients remaining are:\n" + clients.get());
                         ClientIdle.idleMap.remove(e.getClientId());
+                        IdleCheck2.update(api);
                     }
                 }
             });
