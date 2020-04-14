@@ -12,7 +12,7 @@ public class IdleCheck2 {
     private static Map<Integer, Long> oldIdleTime = new HashMap<>();
     private static List<Client> clientList;
     private static Boolean justConnected = true;
-
+    public static long maxIdleSeconds = 50*5;
     public IdleCheck2(TS3Api api, Config config) {
         this.api = api;
         this.config = config;
@@ -37,7 +37,7 @@ public class IdleCheck2 {
 
 
     private void idleChange() {
-        long maxIdleSeconds = TimeUnit.MINUTES.toSeconds(5);
+//        long maxIdleSeconds = TimeUnit.MINUTES.toSeconds(5);
 
         ClientsConnected clientsConnected = new ClientsConnected(api);
 
