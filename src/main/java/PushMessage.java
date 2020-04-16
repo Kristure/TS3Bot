@@ -1,10 +1,8 @@
-package main;
-
 import net.pushover.client.*;
 
 public class PushMessage {
-    private String pushoverApi;
-    private String pushoverUserId;
+    private final String pushoverApi;
+    private final String pushoverUserId;
 
     public PushMessage(String pushoverApi, String pushoverUserId) {
         this.pushoverApi = pushoverApi;

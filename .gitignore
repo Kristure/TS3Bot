@@ -3,4 +3,4 @@ out/
 *.iml
 /src/META-INF/
 *.jar
-/config/test/
+/src/main/resources/config/test/
