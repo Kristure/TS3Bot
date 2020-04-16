@@ -3,5 +3,5 @@ out/
 *.iml
 /src/META-INF/
 *.jar
-/src/main/resources/config/test/
+/config/test/
 /target/
