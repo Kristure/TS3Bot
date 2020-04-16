@@ -1,5 +1,3 @@
-package main;
-
 import com.github.theholywaffle.teamspeak3.TS3Api;
 
 import java.util.Calendar;
