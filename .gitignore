@@ -4,3 +4,4 @@ out/
 /src/META-INF/
 *.jar
 /src/main/resources/config/test/
+/target/
