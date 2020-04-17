@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class Scheduler {
     private final TS3Api api;
     private final Config config;
-    private ScheduledExecutorService tenSecScheduler;
+    private ScheduledExecutorService oneSecScheduler;
     private ScheduledExecutorService minuteScheduler;
     private ScheduledExecutorService hourlyScheduler;
 
@@ -40,12 +40,12 @@ public class Scheduler {
                 TimeUnit.SECONDS);
     }
 
-    private void fiveSecScheduler(){
-        tenSecScheduler = Executors.newScheduledThreadPool(1);
+    private void oneSecScheduler(){
+        oneSecScheduler = Executors.newScheduledThreadPool(1);
         Calendar calendar = Calendar.getInstance();
         int milliseconds = calendar.get(Calendar.MILLISECOND);
         int milliSecondsToSecond = 1000 - milliseconds;
-        tenSecScheduler.scheduleAtFixedRate(new FiveSecScheduler(this.config, this.api),
+        oneSecScheduler.scheduleAtFixedRate(new OneSecScheduler(this.config, this.api),
                 milliSecondsToSecond,
                 1000,
                 TimeUnit.MILLISECONDS);
@@ -54,13 +54,13 @@ public class Scheduler {
     public void startAll(){
         hourlyScheduler();
         minuteScheduler();
-        fiveSecScheduler();
+        oneSecScheduler();
         ClientIdle.updateMap(api);
     }
 
     public void stopAll(){
         hourlyScheduler.shutdown();
         minuteScheduler.shutdown();
-        tenSecScheduler.shutdown();
+        oneSecScheduler.shutdown();
     }
 }
