@@ -1,5 +1,5 @@
 {
-  "testing": true,
+  "setEnableCommunicationsLogging": true,
   "floodRateUnlimited": false,
   "queryUsername": "serveradmin",
   "queryPassword": "Password123",

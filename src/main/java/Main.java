@@ -40,7 +40,7 @@ public class Main {
             ts3Config.setQueryPort(config.queryPort);
             if (config.floodRateUnlimited)
                 ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
-            if (config.testing)
+            if (config.setEnableCommunicationsLogging)
                 ts3Config.setEnableCommunicationsLogging(true);
 
             final TS3Query query = new TS3Query(ts3Config);
