@@ -9,3 +9,4 @@ Functionality:
   * Server join
   * Server leave
   * Channel change
+  * Away
