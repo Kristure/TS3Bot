@@ -6,14 +6,12 @@ import java.util.concurrent.TimeUnit;
 
 public class IdleCheck {
     private final TS3Api api;
-    private final Config config;
     private static Map<Integer, Long> oldIdleTime = new HashMap<>();
     private static List<Client> clientList;
     private static Boolean justConnected = true;
     public static long maxIdleSeconds = 60*5;
-    public IdleCheck(TS3Api api, Config config) {
+    public IdleCheck(TS3Api api) {
         this.api = api;
-        this.config = config;
 
         updateMap();
     }
@@ -62,7 +60,7 @@ public class IdleCheck {
 
 
             if (idleTime > maxIdleInMillis && oldIdleTime.get(cli.getId()) < maxIdleInMillis) {
-                PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                PushMessage pushMessage = new PushMessage(Config.pushoverApi, Config.pushoverUserId);
                 pushMessage.push(cli.getNickname() + " is now idle!" + "\n\n"
                         + clientsConnected.get());
 
@@ -70,7 +68,7 @@ public class IdleCheck {
                 ClientIdle.idleMap.put(cli.getId(), true);
             }
             if (idleTime < maxIdleInMillis && oldIdleTime.get(cli.getId()) > maxIdleInMillis) {
-                PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                PushMessage pushMessage = new PushMessage(Config.pushoverApi, Config.pushoverUserId);
                 pushMessage.push(
                         cli.getNickname() +
                                 " is back from being idle for "

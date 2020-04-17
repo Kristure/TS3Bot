@@ -7,15 +7,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Scheduler {
     private final TS3Api api;
-    private final Config config;
     private ScheduledExecutorService oneSecScheduler;
     private ScheduledExecutorService minuteScheduler;
     private ScheduledExecutorService hourlyScheduler;
 
 
-    public Scheduler(TS3Api api, Config config) {
+    public Scheduler(TS3Api api) {
         this.api = api;
-        this.config = config;
     }
 
     private void hourlyScheduler (){
@@ -23,7 +21,7 @@ public class Scheduler {
         Calendar calendar = Calendar.getInstance();
         int minutes = calendar.get(Calendar.MINUTE);
         int minutesToHour = 60 - minutes;
-        hourlyScheduler.scheduleAtFixedRate(new HourlyCheck(this.config, this.api),
+        hourlyScheduler.scheduleAtFixedRate(new HourlyCheck(this.api),
                 minutesToHour,
                 60,
                 TimeUnit.MINUTES);
@@ -34,7 +32,7 @@ public class Scheduler {
         Calendar calendar = Calendar.getInstance();
         int seconds = calendar.get(Calendar.SECOND);
         int secondsToMinute = 60 - seconds;
-        minuteScheduler.scheduleAtFixedRate(new MinuteCheck(this.config, this.api),
+        minuteScheduler.scheduleAtFixedRate(new MinuteCheck(this.api),
                 secondsToMinute,
                 60,
                 TimeUnit.SECONDS);
@@ -45,7 +43,7 @@ public class Scheduler {
         Calendar calendar = Calendar.getInstance();
         int milliseconds = calendar.get(Calendar.MILLISECOND);
         int milliSecondsToSecond = 1000 - milliseconds;
-        oneSecScheduler.scheduleAtFixedRate(new OneSecScheduler(this.config, this.api),
+        oneSecScheduler.scheduleAtFixedRate(new OneSecScheduler(this.api),
                 milliSecondsToSecond,
                 1000,
                 TimeUnit.MILLISECONDS);

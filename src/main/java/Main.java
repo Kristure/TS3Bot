@@ -34,20 +34,21 @@ public class Main {
             Reader reader = Files.newBufferedReader(Paths.get("config/config.json"));
             Config config = json.fromJson(reader, Config.class);
 
+            System.out.println(Config.queryPort);
 
             final TS3Config ts3Config = new TS3Config();
-            ts3Config.setHost(config.server);
-            ts3Config.setQueryPort(config.queryPort);
-            if (config.floodRateUnlimited)
+            ts3Config.setHost(Config.server);
+            ts3Config.setQueryPort(Config.queryPort);
+            if (Config.floodRateUnlimited)
                 ts3Config.setFloodRate(TS3Query.FloodRate.UNLIMITED);
-            if (config.setEnableCommunicationsLogging)
+            if (Config.setEnableCommunicationsLogging)
                 ts3Config.setEnableCommunicationsLogging(true);
 
             final TS3Query query = new TS3Query(ts3Config);
             query.connect();
 
             final TS3Api api = query.getApi();
-            api.login(config.queryUsername, config.queryPassword);
+            api.login(Config.queryUsername, Config.queryPassword);
             api.selectVirtualServerById(1);
             api.setNickname("ArmandBot");
 
@@ -63,7 +64,7 @@ public class Main {
             final int clientId = api.whoAmI().getId();
 
             // Start scheduled executor service
-           Scheduler scheduler = new Scheduler(api, config);
+           Scheduler scheduler = new Scheduler(api);
            scheduler.startAll();
 
             // Listen to chat in the channel the query is currently in
@@ -91,7 +92,7 @@ public class Main {
                                     "!channel = Creates a new private channel with you as its channel administrator");
                         } else if (message.equals("!summon")) {
                             // Send pushover notification
-                            PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                            PushMessage pushover = new PushMessage(Config.pushoverApi, Config.pushoverUserId);
                             pushover.push("You are summoned by " + e.getInvokerName());
                             api.sendChannelMessage(e.getInvokerName() + ": You have summoned the server admin. " +
                                     "A notification has been sent to" +
@@ -136,7 +137,7 @@ public class Main {
                                 "To use me, type [b]!help[/b] in the [b]Welcome[/b] channel.");
 
                         ClientsConnected clients = new ClientsConnected(api);
-                        PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                        PushMessage pushover = new PushMessage(Config.pushoverApi, Config.pushoverUserId);
                         pushover.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
                                 "Current clients connected are:\n" + clients.get());
                         clientDbMap.put(e.getClientId(), api.getClientInfo(e.getClientId()));
@@ -151,7 +152,7 @@ public class Main {
                 public void onClientMoved(ClientMovedEvent e) {
                     if (api.getClientInfo(e.getClientId()).getType() == 0) {
                         if (api.getClientInfo(e.getClientId()).getType() == 0) {
-                            PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                            PushMessage pushover = new PushMessage(Config.pushoverApi, Config.pushoverUserId);
                             ClientsConnected clients = new ClientsConnected(api);
 
                             if (api.getClientInfo(e.getClientId()).getDatabaseId() == 12) {
@@ -173,7 +174,7 @@ public class Main {
                 public void onClientLeave(ClientLeaveEvent e) {
                     if (clientDbMap.get(e.getClientId()).getType() == 0) {
                         ClientsConnected clients = new ClientsConnected(api);
-                        PushMessage pushover = new PushMessage(config.pushoverApi, config.pushoverUserId);
+                        PushMessage pushover = new PushMessage(Config.pushoverApi, Config.pushoverUserId);
                         pushover.push(clientDbMap.get(e.getClientId()).getNickname() + " just left the server.\n\n" +
                                 "Clients remaining are:\n" + clients.get());
                         ClientIdle.idleMap.remove(e.getClientId());

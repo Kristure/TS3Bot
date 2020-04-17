@@ -1,28 +1,28 @@
 public class Config {
-    public Boolean setEnableCommunicationsLogging;
-    public boolean floodRateUnlimited;
-    public String queryUsername;
-    public String queryPassword;
-    public String server;
-    public int queryPort;
-    public String pushoverApi;
-    public String pushoverUserId;
+    public static Boolean setEnableCommunicationsLogging;
+    public static Boolean floodRateUnlimited;
+    public static String queryUsername;
+    public static String queryPassword;
+    public static String server;
+    public static Integer queryPort;
+    public static String pushoverApi;
+    public static String pushoverUserId;
 
     public Config(Boolean setEnableCommunicationsLogging,
-                  String queryUsername,
                   Boolean floodRateUnlimited,
+                  String queryUsername,
                   String queryPassword,
                   String server,
                   Integer queryPort,
-                  String pushover_api,
-                  String pushover_user_id) {
-        this.setEnableCommunicationsLogging = setEnableCommunicationsLogging;
-        this.floodRateUnlimited = floodRateUnlimited;
-        this.queryUsername = queryUsername;
-        this.queryPassword = queryPassword;
-        this.server = server;
-        this.queryPort = queryPort;
-        this.pushoverApi = pushover_api;
-        this.pushoverUserId = pushover_user_id;
+                  String pushoverApi,
+                  String pushoverUserId) {
+        Config.setEnableCommunicationsLogging = setEnableCommunicationsLogging;
+        Config.floodRateUnlimited = floodRateUnlimited;
+        Config.queryUsername = queryUsername;
+        Config.queryPassword = queryPassword;
+        Config.server = server;
+        Config.queryPort = queryPort;
+        Config.pushoverApi = pushoverApi;
+        Config.pushoverUserId = pushoverUserId;
     }
 }
