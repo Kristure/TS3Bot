@@ -13,7 +13,7 @@ public class FiveSecScheduler implements Runnable {
     public void run() {
 //        IdleCheck idleCheck = new IdleCheck(this.api, this.config);
 //        idleCheck.run();
-        IdleCheck2 idleCheck2 = new IdleCheck2(this.api, this.config);
-        idleCheck2.run();
+        IdleCheck idleCheck = new IdleCheck(this.api, this.config);
+        idleCheck.run();
     }
 }

@@ -1,18 +1,16 @@
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class IdleCheck {
-
-    private List<Client> clientList;
-    private Map<Integer, Client> clientMap = new HashMap<>();
-    private TS3Api api;
-    private Config config;
-
+    private final TS3Api api;
+    private final Config config;
+    private static Map<Integer, Long> oldIdleTime = new HashMap<>();
+    private static List<Client> clientList;
+    private static Boolean justConnected = true;
+    public static long maxIdleSeconds = 60*5;
     public IdleCheck(TS3Api api, Config config) {
         this.api = api;
         this.config = config;
@@ -20,46 +18,71 @@ public class IdleCheck {
         updateMap();
     }
 
-    private void updateMap(){
-        clientMap.clear();
+    private void updateMap() {
         clientList = api.getClients();
-        for(Client cli : clientList){
-            clientMap.put(cli.getId(), cli);
+        for (Client cli : clientList) {
+            if(IdleCheck.justConnected) oldIdleTime.put(cli.getId(), cli.getIdleTime());
         }
     }
 
-    private void idleChange () {
-        // Set maxIdleValue
-        long maxIdleSeconds = 60 * 5;
-
+    public static void update(TS3Api api){
+        clientList.clear();
         clientList = api.getClients();
+        for (Client cli : clientList) {
+            oldIdleTime.put(cli.getId(), cli.getIdleTime());
+        }
+    }
+
+
+    private void idleChange() {
+//        long maxIdleSeconds = TimeUnit.MINUTES.toSeconds(5);
 
         ClientsConnected clientsConnected = new ClientsConnected(api);
 
-        for(Client cli : clientList){
-            if(cli.getType()!=0) continue;
+        if (IdleCheck.justConnected) {
+            for (Client cli : clientList) {
+                if (cli.getIdleTime() > TimeUnit.SECONDS.toMillis(maxIdleSeconds)) {
+                    ClientIdle.idleMap.put(cli.getId(), true);
+                } else {
+                    ClientIdle.idleMap.put(cli.getId(), false);
+                }
+                System.out.println("No changes in idle yet");
+            }
+            IdleCheck.justConnected = false;
+        }
 
-            long oldIdleTimeInSeconds = TimeUnit.MILLISECONDS.toSeconds(clientMap.get(cli.getId()).getIdleTime());
-            long oldIdleTime = clientMap.get(cli.getId()).getIdleTime();
-            long idleTimeInSeconds = TimeUnit.MILLISECONDS.toSeconds(cli.getIdleTime());
+
+        for (Client cli : clientList) {
+            if (cli.getType() != 0) continue;
+
+            long idleTime = cli.getIdleTime();
+            long maxIdleInMillis = TimeUnit.SECONDS.toMillis(maxIdleSeconds);
+            Date time = Calendar.getInstance().getTime();
+
+//            System.out.printf("%s %s", cli.getNickname(), ConvertTime.convert(cli.getIdleTime()));
+//            System.out.println(" " + ClientIdle.idleMap.get(cli.getId()));
 
 
-            if(idleTimeInSeconds >= maxIdleSeconds && idleTimeInSeconds < maxIdleSeconds + 5){
+            if (idleTime > maxIdleInMillis && oldIdleTime.get(cli.getId()) < maxIdleInMillis) {
                 PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
                 pushMessage.push(cli.getNickname() + " is now idle!" + "\n\n"
                         + clientsConnected.get());
 
+                System.out.println(time + " - " + cli.getNickname() + " is idle");
+                ClientIdle.idleMap.put(cli.getId(), true);
             }
-            if(idleTimeInSeconds < 6 && oldIdleTimeInSeconds >= maxIdleSeconds){
+            if (idleTime < maxIdleInMillis && oldIdleTime.get(cli.getId()) > maxIdleInMillis) {
                 PushMessage pushMessage = new PushMessage(config.pushoverApi, config.pushoverUserId);
                 pushMessage.push(
                         cli.getNickname() +
                                 " is back from being idle for "
-                                + ConvertTime.convert(oldIdleTime) + "\n\n"
+                                + ConvertTime.convert(oldIdleTime.get(cli.getId())) + "\n\n"
                                 + clientsConnected.get());
+                System.out.printf(time + " - " + "%s is back from being idle for %s\n", cli.getNickname(), ConvertTime.convert(oldIdleTime.get(cli.getId())));
+                ClientIdle.idleMap.put(cli.getId(), false);
             }
+            oldIdleTime.put(cli.getId(), cli.getIdleTime());
         }
-        updateMap();
     }
 
     public void run() {
