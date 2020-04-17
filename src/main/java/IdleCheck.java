@@ -35,8 +35,6 @@ public class IdleCheck {
 
 
     private void idleChange() {
-//        long maxIdleSeconds = TimeUnit.MINUTES.toSeconds(5);
-
         ClientsConnected clientsConnected = new ClientsConnected(api);
 
         if (IdleCheck.justConnected) {
