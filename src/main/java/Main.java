@@ -52,7 +52,7 @@ public class Main {
             api.selectVirtualServerById(1);
             api.setNickname("ArmandBot");
 
-            // Map clients with clid so that it can be used to get nickname on serverleave
+            // Map clients with clid so that it can be used to get nickname on server leave
             Map<Integer, Client> clientDbMap = new HashMap<>();
             List<Client> clientDbList = api.getClients();
             for (Client cli : clientDbList) {
