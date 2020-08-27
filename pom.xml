@@ -59,7 +59,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        Main
+                                        TS3Bot
                                     </mainClass>
                                 </manifest>
                             </archive>
