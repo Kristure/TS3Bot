@@ -1,5 +1,6 @@
 import com.github.theholywaffle.teamspeak3.api.ChannelProperty;
 import com.github.theholywaffle.teamspeak3.api.TextMessageTargetMode;
+import com.github.theholywaffle.teamspeak3.api.event.ClientJoinEvent;
 import com.github.theholywaffle.teamspeak3.api.event.TS3EventAdapter;
 import com.github.theholywaffle.teamspeak3.api.event.TS3EventType;
 import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TS3Listener {
+    Boolean serverEvent;
+
     public void chatListener() {
         TS3Bot.bot.api.registerEvent(TS3EventType.TEXT_SERVER);
 
@@ -26,7 +29,10 @@ public class TS3Listener {
                                 "!ping = Returns pong\n" +
                                 "!channel = Creates a new private channel with you as its channel administrator");
                     } else if (message.equals("!summon")) {
-                        // TODO: Create class for pushover
+                        PushMessage pushMessage = new PushMessage();
+                        pushMessage.push("You are summoned by " + e.getInvokerName());
+                        TS3Bot.bot.api.sendServerMessage(e.getInvokerName() + ": You have summoned the server admin." +
+                                " A notification has been sent to his phone.");
                     } else if (message.startsWith("hello")) {
                         TS3Bot.bot.api.sendServerMessage("Hello " + e.getInvokerName() + "!");
                     } else if (message.equals("!channel")) {
@@ -52,4 +58,41 @@ public class TS3Listener {
             }
         });
     }
+
+    public void clientJoin() {
+        registerServerEvent();
+
+        TS3Bot.bot.api.addTS3Listeners(new TS3EventAdapter() {
+            @Override
+            public void onClientJoin(ClientJoinEvent e) {
+                if (TS3Bot.bot.api.getClientInfo(e.getClientId()).getType() == 0) {
+                    TS3Bot.bot.api.sendPrivateMessage(e.getClientId(), "Welcome to the ouagadougou server." +
+                            " I am a bot here to make certain tasks automated. To use me" +
+                            ", type [b]!help[/b] in server chat");
+
+                    ClientsConnected clients = new ClientsConnected();
+                    PushMessage pushMessage = new PushMessage();
+                    pushMessage.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
+                            "Current clients connected are:\n" + clients.get());
+                    TS3Bot.clientDb.getClientMap().put(e.getClientId(), TS3Bot.bot.api.getClientInfo(e.getClientId())); // TODO: Check if this line is correct.
+                    // TODO: Create ClientIdle class
+                }
+            }
+        });
+    }
+
+    public void clientMoved() {
+        // TODO: Create clientMoved listener
+    }
+
+    public void clientLeave() {
+        // TODO: Create clientLeave listener
+    }
+
+    private void registerServerEvent () {
+        if (!serverEvent) {
+            TS3Bot.bot.api.registerEvent(TS3EventType.SERVER);
+        }
+    }
+
 }
