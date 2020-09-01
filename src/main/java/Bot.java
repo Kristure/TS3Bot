@@ -14,6 +14,11 @@ public class Bot {
     public TS3Api api;
     public Config config;
 
+/**
+ * Initialize bot object and connect to ts3 server.
+ *
+ * @param path Path to config file. Of type json
+*/
     public Bot(String path) {
         this.path = path;
         this.connect();
