@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TS3Listener {
-    Boolean serverEvent;
+    Boolean serverEvent = false;
 
     public void chatListener() {
         TS3Bot.bot.api.registerEvent(TS3EventType.TEXT_SERVER);
