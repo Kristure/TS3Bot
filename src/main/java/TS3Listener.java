@@ -12,7 +12,7 @@ import java.util.Map;
 public class TS3Listener {
     Boolean serverEvent = false;
 
-    public void chatListener() {
+    public void startChatListener() {
         TS3Bot.bot.api.registerEvent(TS3EventType.TEXT_SERVER);
 
         TS3Bot.bot.api.addTS3Listeners(new TS3EventAdapter() {
@@ -59,7 +59,7 @@ public class TS3Listener {
         });
     }
 
-    public void clientJoin() {
+    public void startClientJoinListener() {
         registerServerEvent();
 
         TS3Bot.bot.api.addTS3Listeners(new TS3EventAdapter() {

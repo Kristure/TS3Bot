@@ -23,8 +23,8 @@ public class TS3Bot {
         clientId = bot.api.whoAmI().getId();
 
         TS3Listener listener = new TS3Listener();
-        listener.chatListener();
-        listener.clientJoin();
+        listener.startChatListener();
+        listener.startClientJoinListener();
 
     }
 }
