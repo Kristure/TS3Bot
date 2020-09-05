@@ -2,6 +2,7 @@ import com.github.theholywaffle.teamspeak3.api.ChannelProperty;
 import com.github.theholywaffle.teamspeak3.api.TextMessageTargetMode;
 import com.github.theholywaffle.teamspeak3.api.event.*;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Channel;
+import com.github.theholywaffle.teamspeak3.api.wrapper.Client;
 import net.pushover.client.MessagePriority;
 import net.pushover.client.PushoverMessage;
 
@@ -98,12 +99,20 @@ public class TS3Listener {
             public void onClientLeave(ClientLeaveEvent e) {
                 if (TS3Bot.clientDb.getClientMap().get(e.getClientId()).getType() == 0) {
                     String nickname = TS3Bot.clientDb.getClientMap().get(e.getClientId()).getNickname();
+                    int databaseId = TS3Bot.clientDb.getClientMap().get(e.getClientId()).getDatabaseId();
                     TS3Bot.clientDb.getClientMap().remove(e.getClientId()); // Remove client who left from clientDb
 
                     ClientsConnected clients = new ClientsConnected();
                     PushMessage pushover = new PushMessage();
-                    pushover.push(nickname + " just left the server.\n\n" +
-                            "Clients remaining are:\n" + clients.get());
+
+                    if (databaseId == 12) {
+                        pushover.push(nickname + " just left the server.\n\n" +
+                                "Clients remaining are:\n" + clients.get(), MessagePriority.HIGH);
+
+                    } else {
+                        pushover.push(nickname + " just left the server.\n\n" +
+                                "Clients remaining are:\n" + clients.get());
+                    }
                     TS3Bot.clientDb.update();
                 }
             }
