@@ -6,10 +6,9 @@ import java.util.Map;
 
 public class ClientDb {
     private Map<Integer, Client> clientMap = new HashMap<>();
-    private List<Client> clientList;
 
     public void update() {
-        clientList = TS3Bot.bot.api.getClients();
+        List<Client> clientList = TS3Bot.bot.api.getClients();
         for (Client cli : clientList) {
             clientMap.put(cli.getId(), cli);
         }

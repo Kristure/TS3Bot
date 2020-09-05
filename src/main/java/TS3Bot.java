@@ -25,6 +25,7 @@ public class TS3Bot {
         TS3Listener listener = new TS3Listener();
         listener.startChatListener();
         listener.startClientJoinListener();
+        listener.startClientLeaveListener();
 
     }
 }

@@ -1,10 +1,9 @@
 import com.github.theholywaffle.teamspeak3.api.ChannelProperty;
 import com.github.theholywaffle.teamspeak3.api.TextMessageTargetMode;
-import com.github.theholywaffle.teamspeak3.api.event.ClientJoinEvent;
-import com.github.theholywaffle.teamspeak3.api.event.TS3EventAdapter;
-import com.github.theholywaffle.teamspeak3.api.event.TS3EventType;
-import com.github.theholywaffle.teamspeak3.api.event.TextMessageEvent;
+import com.github.theholywaffle.teamspeak3.api.event.*;
 import com.github.theholywaffle.teamspeak3.api.wrapper.Channel;
+import net.pushover.client.MessagePriority;
+import net.pushover.client.PushoverMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,8 +71,14 @@ public class TS3Listener {
 
                     ClientsConnected clients = new ClientsConnected();
                     PushMessage pushMessage = new PushMessage();
-                    pushMessage.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
-                            "Current clients connected are:\n" + clients.get());
+
+                    if (TS3Bot.bot.api.getClientInfo(e.getClientId()).getDatabaseId() == 12) {
+                        pushMessage.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
+                                "Current clients connected are:\n" + clients.get(), MessagePriority.HIGH);
+                    } else {
+                        pushMessage.push(e.getClientNickname() + " has joined the teamspeak server. \n\n" +
+                                "Current clients connected are:\n" + clients.get());
+                    }
                     TS3Bot.clientDb.getClientMap().put(e.getClientId(), TS3Bot.bot.api.getClientInfo(e.getClientId())); // TODO: Check if this line is correct.
                     // TODO: Create ClientIdle class
                 }
@@ -85,13 +90,31 @@ public class TS3Listener {
         // TODO: Create clientMoved listener
     }
 
-    public void clientLeave() {
-        // TODO: Create clientLeave listener
+    public void startClientLeaveListener() {
+        registerServerEvent();
+
+        TS3Bot.bot.api.addTS3Listeners(new TS3EventAdapter() {
+            @Override
+            public void onClientLeave(ClientLeaveEvent e) {
+                if (TS3Bot.clientDb.getClientMap().get(e.getClientId()).getType() == 0) {
+                    String nickname = TS3Bot.clientDb.getClientMap().get(e.getClientId()).getNickname();
+                    TS3Bot.clientDb.getClientMap().remove(e.getClientId()); // Remove client who left from clientDb
+
+                    ClientsConnected clients = new ClientsConnected();
+                    PushMessage pushover = new PushMessage();
+                    pushover.push(nickname + " just left the server.\n\n" +
+                            "Clients remaining are:\n" + clients.get());
+                    TS3Bot.clientDb.update();
+                }
+            }
+        });
+
     }
 
     private void registerServerEvent () {
         if (!serverEvent) {
             TS3Bot.bot.api.registerEvent(TS3EventType.SERVER);
+            serverEvent = true;
         }
     }
 
